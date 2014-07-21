@@ -20,14 +20,14 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         id        = "io.cordova.helloCordova"
         version   = "2.0.0">
-    <name>Hello Cordova</name>
+    <name>DESR</name>
 
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Demo Equipment Status Request.
     </description>
 
-    <author href="http://cordova.io" email="dev@cordova.apache.org">
-        Apache Cordova Team
+    <author href="http://cordova.io" email="upasha@tams.com">
+        Umer Pasha
     </author>
 
     <access origin="*"/>
