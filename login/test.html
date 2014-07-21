@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+ 	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+        <title>Test Page</title>
+		<script src="Scripts/jquery-2.1.0.min.js"></script>
+         <script src="Scripts/login.js"></script>
+		<script type="text/javascript">
+		    function getCookie(c_name) {
+		        var c_value = document.cookie;
+		        var c_start = c_value.indexOf(" " + c_name + "=");
+		        if (c_start == -1) {
+		            c_start = c_value.indexOf(c_name + "=");
+		        }
+		        if (c_start == -1) {
+		            c_value = null;
+		        }
+		        else {
+		            c_start = c_value.indexOf("=", c_start) + 1;
+		            var c_end = c_value.indexOf(";", c_start);
+		            if (c_end == -1) {
+		                c_end = c_value.length;
+		            }
+		            c_value = unescape(c_value.substring(c_start, c_end));
+		        }
+		        return c_value;
+		    }
+
+		    function setCookie(c_name, value, exdays) {
+		        var exdate = new Date();
+		        exdate.setDate(exdate.getDate() + exdays);
+		        var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+		        document.cookie = c_name + "=" + c_value;
+		    }
+
+		    function callJsonService() {
+		        $.ajax({
+		            beforeSend: function (xhr) {
+		                xhr.setRequestHeader("Authorization", "Basic " + sessionStorage.getItem(sessionKey));
+		                //xhr.setRequestHeader("Authorization", "");
+		            },
+		            type: 'POST',
+		            url: "svc.aspx",
+		            data: { op: 'GetDocuments', SPUrl: "http://tusspdev1/sites/marketing" },
+		            async: false,
+		            success: function (data) {
+		                //console.log(data.d.results); 
+		                var html = "";
+		                $.each(data.d.results, function (i, item) {
+		                    html += "<div>ID: " + item.ID + " => Name: " + item.Name;
+		                });
+
+		                $("#divContent").text("").append(html);
+		            },
+		            error: function (data) {
+		                alert(JSON.stringify(data));
+		            }
+		        });
+		        return;
+		        $.ajax({
+		            //beforeSend: function (xhr) {
+		            //    //xhr.setRequestHeader("Authorization", "Basic " + Base64.encode("tamsdomain\\sps_devfarmadmin:Dev@tams"));
+		            //    xhr.setRequestHeader("Authorization", "");
+		            //},
+		            type: 'POST',
+		            url: "svc.aspx",
+		            data: { op: 'Authenticate', username: "tamsdomain\\sps_devfarmadmin", password: "Dev@tams33" },
+		            async: false,
+		            success: function (data) {
+		                //console.log(data.d.results); 
+		                alert(JSON.stringify(data));
+		                if (data.d.results) {
+		                    $.ajax({
+		                        beforeSend: function (xhr) {
+		                            xhr.setRequestHeader("Authorization", "Basic " + Base64.encode("tamsdomain\\sps_devfarmadmin:Dev@tams33"));
+		                            //xhr.setRequestHeader("Authorization", "");
+		                        },
+		                        type: 'POST',
+		                        url: "svc.aspx",
+		                        data: { op: 'GetDocuments', SPUrl: "http://tusspdev1/sites/marketing" },
+		                        async: false,
+		                        success: function (data) {
+		                            //console.log(data.d.results); 
+		                            var html = "";
+		                            $.each(data.d.results, function (i, item) {
+		                                html += "<div>ID: " + item.ID + " => Name: " + item.Name;
+		                            });
+
+		                            $("#divContent").text("").append(html);
+		                        },
+		                        error: function (data) {
+		                            alert(JSON.stringify(data));
+		                        }
+		                    });
+		                } else {
+		                    $("#divContent").text("").append("Unauthorized Request.");
+		                }
+		            },
+		            error: function (data) {
+		                alert(JSON.stringify(data));
+		            }
+		        });
+		    }
+		</script>
+	</head>
+	<body>
+        <input type="button" onclick="callJsonService()" value="Call Json Service" />
+		<div id="divContent"></div>
+	</body>
+</html>

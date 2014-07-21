@@ -1,0 +1,121 @@
+﻿<nav class="navbar" role="navigation">
+    <div class="container-fluid">
+        <div>
+            <ul class="nav nav-pills" ng-show="currentView=='Search'">
+                <li class="col-xs-12 li-back-to-catalog" ng-click=""><a ng-click="searchText='';allCatalogs=[];allPosition=1;getAllCatalogs()"><img src="Images/left-arrow.png" class="img-back-arrow" /> Back to Equipment</a></li><li></li>
+            </ul>
+            <ul class="nav nav-pills">
+                <li ng-class="{active:currentView == 'All'}" ng-click="allCatalogs=[];allPosition=1;getAllCatalogs()" ng-show="currentView!='Search'"><a>All</a></li>
+                <li ng-class="{active:currentView == 'Newest'}" ng-click="newestCatalogs=[];newestPosition=1;getNewestCatalog()" ng-show="currentView!='Search'"><a>Newest</a></li>
+                <li><a href="#/newCatalog">Add New</a></li>
+                <li class="li-search">
+                    <input type="text" ng-model="searchText" id="search-text-box" class="form-control form-control-small search-box" placeholder="Search"><button ng-click="searchText=''" id="clearSearch" ng-show="searchText!=''">X</button><input type="button" class="search-button" ng-click="searchCatalogs()" />
+                </li>
+            </ul>
+            <div class="row div-catalog-content">
+                <div class="div-modality">
+                    <table class="table-catalogs">
+                        <tr>
+                            <td>System Type:<br />
+                                <select class="form-control" ng-model="filterDocumentType" id="filterDocumentType">
+                                    <option value="All">All</option>
+                                    <option ng-repeat="systemType in systemTypes" value="{{systemType}}">{{systemType}}</option>
+                                </select>
+                            </td>
+                            <td>Modality:<br />
+                                <select class="form-control" ng-model="filterModality" id="filterModality">
+                                    <option value="All">All</option>
+                                    <option value="CT">CT</option>
+                                    <option value="MR">MR</option>
+                                    <option value="UL">UL</option>
+                                    <option value="VL">VL</option>
+                                    <option value="XR">XR</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="row div-catalogs-list error-message" id="error-div"></div>
+<div class="row div-catalogs-list success-message" id="success-div"></div>
+<div class="row div-catalogs-list" ng-show="currentView=='All' || currentView=='Search'">
+    <table class="table table-bottom">
+        <tr ng-show="allCatalogs.length==0" class="empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr>
+        <tr ng-repeat="catalog in allCatalogs">
+            <td>
+                <table class="table-catalog-info">
+                    <tr>
+                        <td class="catalog-img"><img ng-hide="catalog.ImageURL==''" class="img-icon" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="http://www.trivellesinternational.com/asset/admin/images/no_image.jpg" /></td>
+                        <td class="catalog-info">
+                            <div class="col-xs-12 div-catalog-info">
+                                <span class="head-cat">{{catalog.Modality}} ({{catalog.SystemType}})</span><br />
+                                Serial Number: {{catalog.Product}}<br />
+                                Software Version: {{catalog.Software_x0020_Version}} (Revision {{catalog.Revision_x0020_Level}})<br />
+                                CSS: {{catalog.MCSS}}<br /><br />
+                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}<br/>
+                            </div>               
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="td-add-to-cart">
+                            <div class="col-xs-12 div-catalog-add">
+                                <div class="div-add-to-cart">
+                                    <input type="button" value="Add Status" class="common-button add-to-cart" ng-click="addStatus(catalog.ID)" />
+                                </div>                                
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr> 
+    </table>
+</div>
+<div class="row div-catalogs-list" ng-show="currentView=='Newest'">
+    <table class="table">        
+        <tr ng-show="newestCatalogs.length==0" class="empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr> 
+        <tr ng-repeat="catalog in newestCatalogs">
+            <td>
+                <table class="table-catalog-info">
+                    <tr>
+                        <td class="catalog-img"><img ng-hide="catalog.ImageURL==''" class="img-icon" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="http://www.trivellesinternational.com/asset/admin/images/no_image.jpg" /></td>
+                        <td class="catalog-info">
+                            <div class="col-xs-12 div-catalog-info">
+                                <span class="head-cat">{{catalog.Modality}} ({{catalog.SystemType}})</span><br />
+                                Serial Number: {{catalog.Product}}<br />
+                                Software Version: {{catalog.Software_x0020_Version}} (Revision {{catalog.Revision_x0020_Level}})<br />
+                                CSS: {{catalog.MCSS}}<br /><br />
+                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}<br/>
+                            </div>               
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="td-add-to-cart">
+                            <div class="col-xs-12 div-catalog-add">
+                                <div class="div-add-to-cart"><input type="button" value="Add Status" class="common-button add-to-cart" ng-click="addStatus(catalog.ID)" /></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!--<tr>
+            <td class="td-pagination">
+                <ul class="pagination">
+                    <li ng-show="previousNewestPage!='no'"><a ng-click="paginateNewestData('previous')">Previous</a></li>
+                    <li ng-show="nextNewestPage!='no'"><a ng-click="paginateNewestData('next')">Next</a></li>
+                </ul>
+            </td>
+        </tr>-->
+        </table>
+</div>

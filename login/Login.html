@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <script src="Scripts/Base64Converter.js"></script>
+    <script src="Scripts/jquery-2.1.0.min.js"></script>
+    <script src="Scripts/login.js"></script>
+    <link href="CSS/bootstrap.min.css" rel="stylesheet" />
+    <link href="CSS/login-screen.css" rel="stylesheet" />    
+    <title></title>
+</head>
+<body>
+    <div id="main-div">
+        <div class="logo-div"><img src="Images/toshiba-logo-large.png" /><br />SALES COLLATERAL<br />CATALOG</div>
+        <div class="form-div">
+            <table id="login-table">
+                <tr><td class="login-label">LOGIN</td></tr>
+                <tr><td class="login-input"><input class="form-control" type="text" id="login" /></td></tr>
+                <tr><td class="login-label">Password</td></tr>
+                <tr><td class="login-input"><input class="form-control" type="password" id="password" /></td></tr>
+                <tr><td id="td-error"></td></tr>
+                <tr><td class="login-label"><input type="checkbox" id="rememberMe" />&nbsp;&nbsp;REMEMBER ME</td></tr>
+                <tr><td class="login-button"><input class="common-button" type="button" value="LOGIN" onclick="LoginUser()" /></td></tr>
+            </table>
+        </div>
+        <div class="footer-mark">TOSHIBA CORPORATION 2014. ALL RIGHTS RESERVED<br />V1.0<br />FOR INTERNAL USE ONLY</div>
+    </div>
+</body>
+</html>

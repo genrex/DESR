@@ -1,0 +1,175 @@
+﻿<!--<nav class="navbar" role="navigation">
+    <div class="container-fluid">
+        <div>
+            <ul class="nav nav-pills">
+                <li class="col-xs-12 li-back-to-catalog" ng-click=""><a href="#/mainCatalog"><img src="Images/arrow.png" class="img-back-arrow" /> Back to Main</a></li><li></li>
+            </ul>
+        </div>
+    </div>
+</nav>-->
+<div class="row div-catalogs-list error-message" id="error-div"></div>
+<div class="row div-catalogs-list success-message" id="success-div"></div>
+<table class="table table-add-status">
+    <tr>
+        <td class="section-heading" colspan="2">System information</td>
+    </tr>
+    <tr>
+        <td class="add-status-label">System type*:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="SystemType" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">System serial number*:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="SystemSerialNumber" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Software version*:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="SoftwareVersion" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Revision Level*:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="RevisionLevel" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Date:</td>
+        <td>{{currentDate | date:'MM/dd/yyyy'}}</td>
+    </tr>
+    <tr>
+        <td class="add-status-label">CSS:</td>
+        <td>{{currentUserName}}</td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Modality*:</td>
+        <td>
+            <select class="form-control" ng-model="Modality">
+                <option value="-- Please Select --">-- Please Select --</option>
+                <option value="CT">CT</option>
+                <option value="MR">MR</option>
+                <option value="UL">UL</option>
+                <option value="VL">VL</option>
+                <option value="XR">XR</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Comments:</td>
+        <td>
+            <textarea class="form-control" ng-model="Comments" rows="3"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="section-heading" colspan="2">System condition on arrival</td>        
+    </tr>
+    <tr>
+        <td class="add-status-label">Control panel layout*:</td>
+        <td>
+            <select ng-model="controlPanelLayout" class="form-control">
+                <option value="-- Please Select --">-- Please Select --</option>
+                <option ng-repeat="cPLValue in cPLValues" value="{{cPLValue}}">{{cPLValue}}</option>
+            </select>
+        </td>
+    </tr>
+    <tr ng-show="controlPanelLayout=='Control panel changed'">
+        <td class="add-status-label">Explain if changed:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="LayoutChangeExplain" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Modality work list empty:</td>
+        <td>
+            <input type="radio" ng-model="modalityWorkListEmpty" value="Yes" />  Yes
+            <input type="radio" ng-model="modalityWorkListEmpty" value="No" />  No
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">All software loaded and functioning:</td>
+        <td>
+            <input type="radio" ng-model="allSoftwareLoadedAndFunctioning" value="Yes" />  Yes 
+            <input type="radio" ng-model="allSoftwareLoadedAndFunctioning" value="No" /> No
+        </td>
+    </tr>
+    <tr ng-show="allSoftwareLoadedAndFunctioning=='No'">
+        <td class="add-status-label">Please explain:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="allSoftwareLoadedAndFunctioningReason" />
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">NPD presets on system:</td>
+        <td>
+            <input type="radio" ng-model="nPDPresetsOnSystem" value="Yes" />  Yes 
+            <input type="radio" ng-model="nPDPresetsOnSystem" value="No" /> No
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">HDD free of patients studies:</td>
+        <td>
+            <input type="radio" ng-model="hDDFreeOfPatientStudies" value="Yes" />  Yes 
+            <input type="radio" ng-model="hDDFreeOfPatientStudies" value="No" /> No
+        </td>
+    </tr>
+    <tr>
+        <td class="add-status-label">Demo images loaded on hard drive:</td>
+        <td>
+            <input type="radio" ng-model="demoImagesLoadedOnHardDrive" value="Yes" />  Yes 
+            <input type="radio" ng-model="demoImagesLoadedOnHardDrive" value="No" /> No
+        </td>
+    </tr>
+    <tr>
+        <td class="section-heading" colspan="2">Before leaving customer site</td>
+    </tr>
+    <tr>
+        <td class="add-status-label">System performed as expected:</td>
+        <td>
+            <input type="radio" ng-model="systemPerformedAsExpected" value="Yes" />  Yes 
+            <input type="radio" ng-model="systemPerformedAsExpected" value="No" /> No
+        </td>
+    </tr>    
+    <tr>
+        <td class="add-status-label">Were any issues discovered with system during demo:</td>
+        <td>
+            <input type="radio" ng-model="wereAnyIssuesDiscoveredWithSystemDuringDemo" value="Yes" />  Yes 
+            <input type="radio" ng-model="wereAnyIssuesDiscoveredWithSystemDuringDemo" value="No" /> No
+        </td>
+    </tr>        
+    <tr ng-show="wereAnyIssuesDiscoveredWithSystemDuringDemo=='Yes'">
+        <td class="add-status-label">Was service contacted:</td>
+        <td>
+            <input type="radio" ng-model="wasServiceContacted" value="Yes" />  Yes 
+            <input type="radio" ng-model="wasServiceContacted" value="No" /> No
+        </td>
+    </tr>    
+    <tr>
+        <td class="add-status-label">Confirm modality work list removed from system:</td>
+        <td>
+            <input type="radio" ng-model="ConfirmModalityWorkListRemovedFromSystem" value="Yes" />  Yes 
+            <input type="radio" ng-model="ConfirmModalityWorkListRemovedFromSystem" value="No" /> No
+        </td>
+    </tr>   
+    <tr>
+        <td class="add-status-label">Confirm system HDD emptied of all patient studies:</td>
+        <td>
+            <input type="radio" ng-model="ConfirmSystemHddEmptiedOfAllPatientStudies" value="Yes" />  Yes 
+            <input type="radio" ng-model="ConfirmSystemHddEmptiedOfAllPatientStudies" value="No" /> No
+        </td>
+    </tr> 
+</table>
+<table class="table add-status-buttons">
+    <tr>
+        <td>
+            <input type="button" value="Cancel" class="common-button" ng-click="cancelStatus()" />
+        </td>
+        <td>
+            <input type="button" value="Submit" class="common-button" ng-click="saveStatus()" />
+        </td>
+    </tr>
+    <tr><td colspan="2" class="td-error-message" id="error-div2"></td></tr>
+</table>
