@@ -6,7 +6,7 @@
             </ul>
             <ul class="nav nav-pills">
                 <li ng-class="{active:currentView == 'All'}" ng-click="allCatalogs=[];allPosition=1;getAllCatalogs()" ng-show="currentView!='Search'"><a>All</a></li>
-                <li ng-class="{active:currentView == 'Newest'}" ng-click="newestCatalogs=[];newestPosition=1;getNewestCatalog()" ng-show="currentView!='Search'"><a>Newest</a></li>
+                <li ng-class="{active:currentView == 'Newest'}" ng-click="newestCatalogs=[];newestPosition=1;getNewestCatalog()" ng-show="currentView!='Search'"><a>Latest</a></li>
                 <li><a href="#/newCatalog">Add New</a></li>
                 <li class="li-search">
                     <input type="text" ng-model="searchText" id="search-text-box" class="form-control form-control-small search-box" placeholder="Search"><button ng-click="searchText=''" id="clearSearch" ng-show="searchText!=''">X</button><input type="button" class="search-button" ng-click="searchCatalogs()" />
