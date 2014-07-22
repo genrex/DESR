@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -278,11 +279,12 @@ public partial class svc : System.Web.UI.Page
                         Revision_x0020_Level = item["Revision_x0020_Level"] + "",
                         System_x0020_Date = item["System_x0020_Date"] + "",
                         ID = item["ID"] + "",
-                        ImageURL = ""
+                        ImageURL = "" //item["ImageURL"] + ""
                     };
                     if (item["ImageURL"] + "" != "")
                     {
                         cat.ImageURL = DownloadFile(item["ImageURL"] + "");
+						//cat.ImageURL = Path.GetFileName(item["ImageURL"]).ToString();
                     }
                     documents.Add(cat);
                 }
@@ -376,7 +378,7 @@ public partial class svc : System.Web.UI.Page
                         Revision_x0020_Level = item["Revision_x0020_Level"] + "",
                         System_x0020_Date = item["System_x0020_Date"] + "",
                         ID = item["ID"] + "",
-                        ImageURL = ""
+                        ImageURL = "" //item["ImageURL"] + ""
                     };
                     if (item["ImageURL"] + "" != "")
                     {
@@ -430,7 +432,7 @@ public partial class svc : System.Web.UI.Page
                         Revision_x0020_Level = item["Revision_x0020_Level"] + "",
                         System_x0020_Date = item["System_x0020_Date"] + "",
                         ID = item["ID"] + "",
-                        ImageURL = ""
+                        ImageURL = "" // item["ImageURL"] + ""
                     };
                     if (item["ImageURL"] + "" != "")
                     {
@@ -463,7 +465,7 @@ public partial class svc : System.Web.UI.Page
                     Revision_x0020_Level = item["Revision_x0020_Level"] + "",
                     System_x0020_Date = item["System_x0020_Date"] + "",
                     ID = item["ID"] + "",
-                    ImageURL = ""
+                    ImageURL = "" //item["ImageURL"] + ""
                 };
                 if (item["ImageURL"] + "" != "")
                 {
@@ -681,6 +683,8 @@ public partial class svc : System.Web.UI.Page
             {
                 using (SPWeb web = site.OpenWeb())
                 {
+                    
+                    
                     SPFile file = web.GetFile(fileURL);
                     byte[] data = file.OpenBinary();
                     if (!System.IO.File.Exists(@"" + System.Configuration.ConfigurationManager.AppSettings["DownloadedFilesFolder"] + file.Name))
