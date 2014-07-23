@@ -215,21 +215,21 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
     $scope.allCatalogs = [];
     var cartCatalog = [];
 
-    //$(document).scroll(function () {
-    //    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
-    //        if ($location.path() == '/mainCatalog') {
-    //            if ($scope.currentView == 'All') {
-    //                $scope.allPosition++;
-    //                $scope.getAllCatalogs();
-    //            }
+    $(document).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+            if ($location.path() == '/mainCatalog') {
+                if ($scope.currentView == 'All') {
+                    $scope.allPosition++;
+                    $scope.getAllCatalogs();
+                }
 
-    //            if ($scope.currentView == 'Newest') {
-    //                $scope.newestPosition++;
-    //                $scope.getNewestCatalog();
-    //            }
-    //        }
-    //    }
-    //});
+                if ($scope.currentView == 'Newest') {
+                    $scope.newestPosition++;
+                    $scope.getNewestCatalog();
+                }
+            }
+        }
+    });
 
     $('#filterModality').change(function () {
         $scope.filterModality = $('#filterModality').val();
@@ -420,7 +420,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
             $('#span-username').html($scope.currentUserName);
             $http({
                 method: "GET",
-                url: "/VirtualApps/TAMS.ENT/ENTWebs/TAMS.ENT.SQLTOREST/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
+                url: "/VirtualApps/ENTWebs/TAMS.ENT.SQLTOREST.Web/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -442,7 +442,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
     } else {
         $http({
             method: "GET",
-            url: "/VirtualApps/TAMS.ENT/ENTWebs/TAMS.ENT.SQLTOREST/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
+            url: "/VirtualApps/ENTWebs/TAMS.ENT.SQLTOREST.Web/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -602,7 +602,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
             $('#span-username').html($scope.currentUserName);
             $http({
                 method: "GET",
-                url: "/VirtualApps/TAMS.ENT/ENTWebs/TAMS.ENT.SQLTOREST/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
+                url: "/VirtualApps/ENTWebs/TAMS.ENT.SQLTOREST.Web/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -624,7 +624,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
     } else {
         $http({
             method: "GET",
-            url: "/VirtualApps/TAMS.ENT/ENTWebs/TAMS.ENT.SQLTOREST/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
+            url: "/VirtualApps/ENTWebs/TAMS.ENT.SQLTOREST.Web/svc.aspx?op=GetData&conn=TestConnString&cmd=EXEC%20prd_FilterByEmployeeEmail%20@EmployeeStatus%20=%20N%27T%27,%20@Email%20=%20N%27" + $('#current-user-email').val() + "%27",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },

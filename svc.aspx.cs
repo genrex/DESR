@@ -140,41 +140,6 @@ public partial class svc : System.Web.UI.Page
 
     #endregion
 
-    #region OP::GetDocuments
-
-    private class JsonDocument
-    {
-        public int ID;
-        public string Name;
-    }
-
-    public string GetDocuments(string SPUrl)
-    {
-        List<JsonDocument> documents = new List<JsonDocument>();
-
-        using (SPSite site = new SPSite(SPUrl))
-        {
-            using (SPWeb web = site.OpenWeb())
-            {
-                SPList mList = web.Lists.TryGetList("DESRSystems");
-                if (mList != null)
-                {
-                    foreach (SPListItem mItem in mList.Items)
-                    {
-                        documents.Add(new JsonDocument
-                        {
-                            ID = mItem.ID,
-                            Name = GetValue(mItem["FileLeafRef"])
-                        });
-                    }
-                }
-            }
-        }
-        return CreateJsonResponse(documents.ToArray());
-    }
-
-    #endregion
-
     #region OP::Authenticate
 
     public string Authenticate(string authInfo, string currentURL, string SPUrl)
@@ -701,38 +666,6 @@ public partial class svc : System.Web.UI.Page
             return stream;
         }
         catch (Exception ex) { return null; }
-    }
-
-    public void DownloadFileLocal(string fileName)
-    {
-        try
-        {
-            Response.Buffer = false;
-            Response.Clear();
-            Response.ClearContent();
-
-            Response.AppendHeader("Content-Disposition", string.Format("attachment; filename=\"{0}\"", fileName));
-
-            using (FileStream stream = new FileStream(@"" + System.Configuration.ConfigurationManager.AppSettings["DownloadedFilesFolder"] + fileName, FileMode.Open, FileAccess.Read))
-            {
-                using (BinaryReader reader = new BinaryReader(stream))
-                {
-                    string mimeType = "application/unknown";
-                    string ext = System.IO.Path.GetExtension(fileName).ToLower();
-                    Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(ext);
-                    if (regKey != null && regKey.GetValue("Content Type") != null)
-                    {
-                        mimeType = regKey.GetValue("Content Type").ToString();
-                    }
-                    Response.ContentType = mimeType;
-                    Response.BinaryWrite(reader.ReadBytes((int)stream.Length - 1));
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            //log exception or return error
-        }
     }
 
     #endregion
