@@ -32,7 +32,7 @@
 
     <access origin="*"/>
 
-	<icon src="icon.png" />
+	<icon src="/res/icon/icon.png" />
     <!-- content src="https://fsadev.tams.com"/>    for external pages -->
     <content src="http://tusspdev1/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoEquipmentStatusRequest.Mobile/main.html#/login"/>
     <!--  content src="index.html" / --> 
