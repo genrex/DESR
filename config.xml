@@ -19,7 +19,7 @@
 -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         id        = "io.cordova.helloCordova"
-        version   = "2.0.0">
+        version   = "3.3.0">
     <name>DESR</name>
 
     <description>
@@ -30,8 +30,6 @@
         Umer Pasha
     </author>
 
-
-	
     <access origin="*"/>
 
     <!-- content src="https://fsadev.tams.com"/>    for external pages -->
