@@ -30,7 +30,15 @@
         Umer Pasha
     </author>
 
-    <!-- Define app icon for each platform. -->
+
+	
+    <access origin="*"/>
+
+    <!-- content src="https://fsadev.tams.com"/>    for external pages -->
+    <content src="http://tusspdev1/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoEquipmentStatusRequest.Mobile/main.html#/login"/>
+    <!--  content src="index.html" / --> 
+
+	    <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
     <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:qualifier="ldpi" />
     <icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:qualifier="mdpi" />
@@ -43,12 +51,6 @@
     <icon src="res/icon/windows-phone/icon-48.png"  gap:platform="winphone" />
     <icon src="res/icon/windows-phone/icon-173.png" gap:platform="winphone"   gap:role="background" />
 	
-    <access origin="*"/>
-
-    <!-- content src="https://fsadev.tams.com"/>    for external pages -->
-    <content src="http://tusspdev1/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoEquipmentStatusRequest.Mobile/main.html#/login"/>
-    <!--  content src="index.html" / --> 
-
     <preference name="loglevel" value="DEBUG" />
     <!--
       <preference name="splashscreen" value="resourceName" />
