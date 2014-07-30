@@ -7,8 +7,9 @@
 position:fixed;  top: 0;
   left: 0;
   right: 0;
-  height: 2000px;
-  background-color: #ff0000;
+  height: 68px;
+  background-color: #ffffff;
+  z-index:800
 }
 
 
