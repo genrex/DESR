@@ -26,7 +26,7 @@
         Demo Equipment Status Request.
     </description>
 
-    <author href="http://cordova.io" email="upasha@tams.com">
+    <author href="http://www.umerpasha.com" email="upasha@tams.com">
         Umer Pasha
     </author>
 
@@ -105,4 +105,33 @@
     <!-- Deprecated plugins element. Remove in 3.0 -->
     <plugins>
     </plugins>
+
+
+
+
+
+    <!-- Define app icon for each platform. -->
+    <icon src="icon.png" />
+    <icon src="res/icon/icon.png"   gap:platform="android"    gap:qualifier="ldpi" />
+    <icon src="res/icon/icon-60.png"   gap:platform="android"    gap:qualifier="mdpi" />
+    <icon src="res/icon/icon-72.png"   gap:platform="android"    gap:qualifier="hdpi" />
+    <icon src="res/icon/icon-76.png"  gap:platform="android"    gap:qualifier="xhdpi" />
+    <icon src="res/icon/icon.png"     gap:platform="blackberry" />
+    <icon src="res/icon/icon.png"     gap:platform="blackberry" gap:state="hover"/>
+    <icon src="res/icon/icon.png"            gap:platform="ios"        width="57" height="57" />
+    <icon src="res/icon/icon-60.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="res/icon/icon-72.png"         gap:platform="ios"        width="114" height="114" />
+    <icon src="res/icon/icon-76.png"         gap:platform="ios"        width="144" height="144" />
+    <icon src="res/icon/icon-60.png"          gap:platform="webos" />
+    <icon src="res/icon/icon.png"  gap:platform="winphone" />
+    <icon src="res/icon/icon-76.png" gap:platform="winphone"   gap:role="background" />
+
+
+
+
+
 </widget>
+
+
+
+
