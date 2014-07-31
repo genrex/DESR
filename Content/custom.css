@@ -586,6 +586,27 @@ position:fixed;  top: 0;
     padding:2px 0px 2px 5px;
     height:15px;
 }
+.div-page-title-white {
+    font-size:12px;
+    max-width:780px;
+    background:red;
+    background-color:#ffffff;
+    background-size:780px;
+    color:white;
+    padding:2px 0px 2px 5px;
+    height:20px;
+}
+
+.div-page-title-black {
+    font-size:12px;
+    max-width:780px;
+    background:red;
+    background-color:#000000;
+    background-size:780px;
+    color:white;
+    padding:2px 0px 2px 5px;
+    height:20px;
+}
 
 .container-fluid {
     padding-top: 5px;
