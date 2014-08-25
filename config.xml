@@ -33,7 +33,7 @@
     <access origin="*"/>
 
     <!-- content src="https://fsadev.tams.com"/>    for external pages -->
-    <content src="/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoESR.Mobile/main.html#/login"/>
+    <content src="/main.html#/login"/>
     <!--  content src="index.html" / --> 
 
 	
