@@ -7,6 +7,7 @@
         </div>
     </div>
 </nav>-->
+<div class="top-header-padding">&nbsp;</div>
 <div class="row div-catalogs-list error-message" id="error-div"></div>
 <div class="row div-catalogs-list success-message" id="success-div"></div>
 <table class="table table-add-status">
@@ -97,7 +98,7 @@
         </td>
     </tr>
     <tr ng-show="allSoftwareLoadedAndFunctioning=='No'">
-        <td class="add-status-label">Please explain:</td>
+        <td class="add-status-label explain-field">Please explain:</td>
         <td>
             <input type="text" class="form-control" ng-model="allSoftwareLoadedAndFunctioningReason" />
         </td>
@@ -132,7 +133,13 @@
             <input type="radio" ng-model="systemPerformedAsExpected" value="Yes" />  Yes 
             <input type="radio" ng-model="systemPerformedAsExpected" value="No" /> No
         </td>
-    </tr>    
+    </tr>  
+    <tr ng-show="systemPerformedAsExpected=='No'">
+        <td class="add-status-label explain-field">Please explain:</td>
+        <td>
+            <input type="text" class="form-control" ng-model="systemPerformedNotAsExpectedExplain" />
+        </td>
+    </tr> 
     <tr>
         <td class="add-status-label">Were any issues discovered with system during demo:</td>
         <td>
@@ -148,14 +155,14 @@
         </td>
     </tr>    
     <tr>
-        <td class="add-status-label">Confirm modality work list removed from system:</td>
+        <td class="add-status-label">Confirm that you have removed modality work list from system:</td>
         <td>
             <input type="radio" ng-model="ConfirmModalityWorkListRemovedFromSystem" value="Yes" />  Yes 
             <input type="radio" ng-model="ConfirmModalityWorkListRemovedFromSystem" value="No" /> No
         </td>
     </tr>   
     <tr>
-        <td class="add-status-label">Confirm system HDD emptied of all patient studies:</td>
+        <td class="add-status-label">Confirm that you have emptied system HDD emptied of all patient studies:</td>
         <td>
             <input type="radio" ng-model="ConfirmSystemHddEmptiedOfAllPatientStudies" value="Yes" />  Yes 
             <input type="radio" ng-model="ConfirmSystemHddEmptiedOfAllPatientStudies" value="No" /> No
@@ -164,12 +171,12 @@
 </table>
 <table class="table add-status-buttons">
     <tr>
-        <td>
+        <td width="50%">
+            <input type="button" value="Submit Draft" class="common-button" ng-click="saveStatus()" />
+        </td>
+        <td width="50%">
             <input type="button" value="Cancel" class="common-button" ng-click="cancelStatus()" />
-        </td>
-        <td>
-            <input type="button" value="Submit" class="common-button" ng-click="saveStatus()" />
-        </td>
+        </td>        
     </tr>
     <tr><td colspan="2" class="td-error-message" id="error-div2"></td></tr>
 </table>

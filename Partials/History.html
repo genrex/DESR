@@ -1,0 +1,141 @@
+﻿<nav class="navbar" role="navigation">
+    <div class="container-fluid">        
+    </div>
+</nav>
+<div class="row div-catalogs-list error-message" id="error-div"></div>
+<div class="row div-catalogs-list success-message" id="success-div"></div>
+<div class="row div-catalogs-list">
+    <table class="table">        
+        <tr ng-repeat="status in historyStatuses">
+            <td>
+                <table class="table-catalog-info">
+                    <tr>
+                        <td class="catalog-info">
+                            <div class="col-xs-12 div-history-status-info history-collapsed itemid_{{status.ID}}" onclick="toggleHistoryStatusDetails(this)">
+                                <span class="head-cat"><b>{{status.Modality}} ({{status.SystemType}})</b></span>
+                                <span style="float:right;">{{status.Modified}}</span>
+                                <div style="">Serial #: {{status.SerialNumber}}</div>
+                            </div>  
+                            <div id="divHistoryStatusDetails">  
+                                <table width="100%">
+                                    <tr>
+                                        <td class="history-item-title" width="30%">System serial number:</td>
+                                        <td class="history-item-value" width="70%">{{status.SerialNumber}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Software version:</td>
+                                        <td class="history-item-value">{{status.SoftwareVersion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Revision Level:</td>
+                                        <td class="history-item-value">{{status.RevisionLevel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Date:</td>
+                                        <td class="history-item-value">{{status.SystemDate}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">CSS:</td>
+                                        <td class="history-item-value">{{status.MCSS}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Modality:</td>
+                                        <td class="history-item-value">{{status.Modality}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Comments:</td>
+                                        <td class="history-item-value" colspan="3">{{status.Comments}}</td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table width="100%">
+                                    <tr>
+                                        <td class="history-item-section-header" colspan="4"><b>System condition on arrival</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title" width="50%">Control panel layout:</td>
+                                        <td class="history-item-value" width="50%">{{status.ControlPanelLayout}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Modality work list empty:</td>
+                                        <td class="history-item-value">{{status.ModalityWorkListEmpty}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">All software loaded and functioning:</td>
+                                        <td class="history-item-value">{{status.AllSoftwareLoadedAndFunctioning}}</td>
+                                    </tr>
+                                    <tr ng-show="status.AllSoftwareLoadedAndFunctioning=='No'" style="font-style:italic;">
+                                        <td class="history-item-title" style="padding-left: 40px;">Explained:</td>
+                                        <td class="history-item-value">{{status.IfNoExplain}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">NPD presets on system:</td>
+                                        <td class="history-item-value">{{status.NPDPresetsOnSystem}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">HDD free of patients studies:</td>
+                                        <td class="history-item-value">{{status.HDDFreeOfPatientStudies}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Demo images loaded on hard drive:</td>
+                                        <td class="history-item-value">{{status.DemoImagesLoadedOnHardDrive}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-section-header" colspan="4"><b>Before leaving customer site</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">System performed as expected:</td>
+                                        <td class="history-item-value">{{status.SystemPerformedAsExpected}}</td>
+                                    </tr>
+                                    <tr ng-show="status.SystemPerformedAsExpected=='No'" style="font-style:italic;">
+                                        <td class="history-item-title" style="padding-left: 40px;">Explained:</td>
+                                        <td class="history-item-value">{{status.SystemPerformedNotAsExpectedExplain}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Were any issues discovered with system during demo:</td>
+                                        <td class="history-item-value">{{status.AnyIssuesDuringDemo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Was service contacted:</td>
+                                        <td class="history-item-value">{{status.wasServiceContacted}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Confirm modality work list removed from system:</td>
+                                        <td class="history-item-value">{{status.ConfirmModalityWorkListRemoved}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Confirm system HDD emptied of all patient studies:</td>
+                                        <td class="history-item-value">{{status.ConfirmSystemHDDEmptied}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-section-header" colspan="4"><b>Additional Comments</b></td>
+                                    </tr>
+                                    <tr ng-show="status.AdditionalComments!=''">
+                                        <td class="history-item-value" colspan="2" style="font-weight:normal;">
+                                            <div ng-bind-html="status.AdditionalComments"></div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-show="status.AdditionalComments==''">
+                                        <td class="history-item-value" colspan="2" style="font-weight:normal;">No comment found.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-value" colspan="2" style="font-weight:normal;text-align:center;padding-top: 10px;padding-bottom: 10px;">
+                                            <textarea id="taAdditionalComment{{status.ID}}" rows="2" style="width: 100%"></textarea>
+                                            <div id="divAddCommentError{{status.ID}}" style="color:red;display:none;">* Comment cannot be empty</div>
+                                            <input type="button" id="btnAddComment_{{status.ID}}" value="Add Comment" class="common-button" ng-click="saveAdditionalComment(status.ID)" />
+                                        </td>
+                                    </tr>
+                                </table>  
+                            </div>         
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="empty-cart history-status-empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr> 
+    </table>
+</div>

@@ -1,70 +1,73 @@
 ﻿<nav class="navbar" role="navigation">
     <div class="container-fluid">
-        <div>
-            <ul class="nav nav-pills" ng-show="currentView=='Search'">
-                <li class="col-xs-12 li-back-to-catalog" ng-click=""><a ng-click="searchText='';allCatalogs=[];allPosition=1;getAllCatalogs()"><img src="Images/left-arrow.png" class="img-back-arrow" /> Back to Equipment</a></li><li></li>
+        <center>
+            <div id="div-search-bar">
+                <table width="100%">
+                    <tr>
+                        <td><input type="text" ng-model="searchText" id="search-text-box" class="form-control search-box" placeholder="Search"><button ng-click="searchText=''" id="clearSearch" ng-show="searchText!=''">X</button></td>
+                        <td width="20"><input type="button" class="search-button" ng-click="searchCatalogs()" /></td>
+                    </tr>
+                </table>            
+            </div>
+            Can’t find system? <a href="">Add Manually</a>
+        </center>
+        <div id="div-nav-bar">
+            <ul class="nav nav-pills nav-back-button" ng-show="currentView=='Search'">
+                <li class="col-xs-12 li-back-to-catalog" ng-click=""><a  style="width:100% !important;padding: 5px 8px !important;" ng-click="searchText='';allCatalogs=[];allPosition=1;getAllCatalogs()"><img src="Images/left-arrow.png" class="img-back-arrow" /> Back to Equipment</a></li><li></li>
             </ul>
             <ul class="nav nav-pills">
                 <li ng-class="{active:currentView == 'All'}" ng-click="allCatalogs=[];allPosition=1;getAllCatalogs()" ng-show="currentView!='Search'"><a>All</a></li>
                 <li ng-class="{active:currentView == 'Newest'}" ng-click="newestCatalogs=[];newestPosition=1;getNewestCatalog()" ng-show="currentView!='Search'"><a>Latest</a></li>
                 <li><a href="#/newCatalog">Add New</a></li>
-                <li class="li-search">
-                    <input type="text" ng-model="searchText" id="search-text-box" class="form-control form-control-small search-box" placeholder="Search"><button ng-click="searchText=''" id="clearSearch" ng-show="searchText!=''">X</button><input type="button" class="search-button" ng-click="searchCatalogs()" />
-                </li>
             </ul>
-            <div class="row div-catalog-content">
-                <div class="div-modality">
-                    <table class="table-catalogs">
-                        <tr>
-                            <td>System Type:<br />
-                                <select class="form-control" ng-model="filterDocumentType" id="filterDocumentType">
-                                    <option value="All">All1</option>
-                                    <option ng-repeat="systemType in systemTypes" value="{{systemType}}">{{systemType}}</option>
-                                </select>
-                            </td>
-                            <td>Modality:<br />
-                                <select class="form-control" ng-model="filterModality" id="filterModality">
-                                    <option value="All">All</option>
-                                    <option value="CT">CT</option>
-                                    <option value="MR">MR</option>
-                                    <option value="UL">UL</option>
-                                    <option value="VL">VL</option>
-                                    <option value="XR">XR</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </table>                    
-                </div>
-            </div>
         </div>
+        <div class="row div-catalog-content" ng-show="currentView!='History'">
+            <div class="div-modality">
+                <table class="table-catalogs">
+                    <tr>
+                        <td>
+                            <select class="form-control" ng-model="filterDocumentType" id="filterDocumentType">
+                                <option value="All">All System Types</option>
+                                <option ng-repeat="systemType in systemTypes" value="{{systemType}}">{{systemType}}</option>
+                            </select>
+                        </td>
+                        <!--<td>Modality:<br />
+                            <select class="form-control" ng-model="filterModality" id="filterModality">
+                                <option value="All">All</option>
+                                <option value="CT">CT</option>
+                                <option value="MR">MR</option>
+                                <option value="UL">UL</option>
+                                <option value="VL">VL</option>
+                                <option value="XR">XR</option>
+                            </select>
+                        </td>-->
+                    </tr>
+                </table>                    
+            </div>
+        </div>          
     </div>
 </nav>
 <div class="row div-catalogs-list error-message" id="error-div"></div>
 <div class="row div-catalogs-list success-message" id="success-div"></div>
 <div class="row div-catalogs-list" ng-show="currentView=='All' || currentView=='Search'">
-    <table class="table table-bottom">
-        <tr ng-show="allCatalogs.length==0" class="empty-cart">
-            <td>
-                There are no items in this catalog.
-            </td>
-        </tr>
+    <table class="table table-bottom table-all-catalog-content">
         <tr ng-repeat="catalog in allCatalogs">
             <td>
                 <table class="table-catalog-info">
                     <tr>
-                        <td class="catalog-img"><img ng-hide="catalog.ImageURL==''" class="img-icon" title="" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="images/no_image.jpg" /></td>
+                        <td class="catalog-img"><div><img ng-hide="catalog.ImageURL==''" class="img-icon" title="" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="images/no_image.jpg" /></div></td>
                         <td class="catalog-info">
                             <div class="col-xs-12 div-catalog-info">
                                 <span class="head-cat">{{catalog.Modality}} ({{catalog.SystemType}})</span><br />
                                 Serial Number: {{catalog.Product}}<br />
                                 Software Version: {{catalog.Software_x0020_Version}} (Revision {{catalog.Revision_x0020_Level}})<br />
-                                CSS: {{catalog.MCSS}}<br /><br />
-                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}<br/>
+                                Last Updated By: {{catalog.MCSS}}<br /><br />
+                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}
                             </div>               
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="td-add-to-cart">
+                        <td class="td-add-to-cart" valign="bottom" colspan="4">
                             <div class="col-xs-12 div-catalog-add">
                                 <div class="div-add-to-cart">
                                     <input type="button" value="Add Status" class="common-button add-to-cart" ng-click="addStatus(catalog.ID)" />
@@ -75,32 +78,32 @@
                 </table>
             </td>
         </tr> 
+        <tr class="empty-cart all-catalog-empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr>
     </table>
 </div>
 <div class="row div-catalogs-list" ng-show="currentView=='Newest'">
     <table class="table">        
-        <tr ng-show="newestCatalogs.length==0" class="empty-cart">
-            <td>
-                There are no items in this catalog.
-            </td>
-        </tr> 
         <tr ng-repeat="catalog in newestCatalogs">
             <td>
                 <table class="table-catalog-info">
                     <tr>
-                        <td class="catalog-img"><img ng-hide="catalog.ImageURL==''" class="img-icon" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="http://www.trivellesinternational.com/asset/admin/images/no_image.jpg" /></td>
+                        <td class="catalog-img"><div><img ng-hide="catalog.ImageURL==''" class="img-icon" src="DownloadedFiles/{{catalog.ImageURL}}" /><img ng-show="catalog.ImageURL==''" class="img-icon" src="http://www.trivellesinternational.com/asset/admin/images/no_image.jpg" /></div></td>
                         <td class="catalog-info">
                             <div class="col-xs-12 div-catalog-info">
                                 <span class="head-cat">{{catalog.Modality}} ({{catalog.SystemType}})</span><br />
                                 Serial Number: {{catalog.Product}}<br />
                                 Software Version: {{catalog.Software_x0020_Version}} (Revision {{catalog.Revision_x0020_Level}})<br />
-                                CSS: {{catalog.MCSS}}<br /><br />
-                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}<br/>
+                                Last Updated By: {{catalog.MCSS}}<br /><br />
+                                Last Updated: {{catalog.System_x0020_Date | date:'MM/dd/yyyy'}}
                             </div>               
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="td-add-to-cart">
+                        <td valign="bottom" class="td-add-to-cart" colspan="4">
                             <div class="col-xs-12 div-catalog-add">
                                 <div class="div-add-to-cart"><input type="button" value="Add Status" class="common-button add-to-cart" ng-click="addStatus(catalog.ID)" /></div>
                             </div>
@@ -109,6 +112,131 @@
                 </table>
             </td>
         </tr>
+        <tr class="empty-cart newest-catalog-empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr> 
+        
+        <!--<tr>
+            <td class="td-pagination">
+                <ul class="pagination">
+                    <li ng-show="previousNewestPage!='no'"><a ng-click="paginateNewestData('previous')">Previous</a></li>
+                    <li ng-show="nextNewestPage!='no'"><a ng-click="paginateNewestData('next')">Next</a></li>
+                </ul>
+            </td>
+        </tr>-->
+        </table>
+</div>
+
+<div class="row div-catalogs-list" ng-show="currentView=='History'">
+    <table class="table">        
+        <tr ng-repeat="status in historyStatuses">
+            <td>
+                <table class="table-catalog-info">
+                    <tr>
+                        <td class="catalog-info">
+                            <div class="col-xs-12 div-history-status-info history-collapsed" onclick="toggleHistoryStatusDetails(this)">
+                                <span class="head-cat"><b>{{status.Modality}} ({{status.SystemType}})</b></span>
+                                <span style="float:right;font-size: 0.8em;">{{status.Modified}}</span>
+                                <div style="font-size: 0.8em;">Serial #: {{status.SerialNumber}}</div>
+                            </div>  
+                            <div id="divHistoryStatusDetails">  
+                                <table width="100%">
+                                    <tr>
+                                        <td class="history-item-title" width="30%">System serial number:</td>
+                                        <td class="history-item-value" width="70%">{{status.SerialNumber}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Software version:</td>
+                                        <td class="history-item-value">{{status.SoftwareVersion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Revision Level:</td>
+                                        <td class="history-item-value">{{status.RevisionLevel}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Date:</td>
+                                        <td class="history-item-value">{{status.SystemDate}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">CSS:</td>
+                                        <td class="history-item-value">{{status.MCSS}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Modality:</td>
+                                        <td class="history-item-value">{{status.Modality}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Comments:</td>
+                                        <td class="history-item-value" colspan="3">{{status.Comments}}</td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table width="100%">
+                                    <tr>
+                                        <td class="history-item-section-header" colspan="4"><b>System condition on arrival</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title" width="50%">Control panel layout:</td>
+                                        <td class="history-item-value" width="50%">{{status.ControlPanelLayout}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Modality work list empty:</td>
+                                        <td class="history-item-value">{{status.ModalityWorkListEmpty}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">All software loaded and functioning:</td>
+                                        <td class="history-item-value">{{status.AllSoftwareLoadedAndFunctioning}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">NPD presets on system:</td>
+                                        <td class="history-item-value">{{status.NPDPresetsOnSystem}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">HDD free of patients studies:</td>
+                                        <td class="history-item-value">{{status.HDDFreeOfPatientStudies}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Demo images loaded on hard drive:</td>
+                                        <td class="history-item-value">{{status.DemoImagesLoadedOnHardDrive}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-section-header" colspan="4"><b>Before leaving customer site</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">System performed as expected:</td>
+                                        <td class="history-item-value">{{status.SystemPerformedAsExpected}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Were any issues discovered with system during demo:</td>
+                                        <td class="history-item-value">{{status.AnyIssuesDuringDemo}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Was service contacted:</td>
+                                        <td class="history-item-value">{{status.wasServiceContacted}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Confirm modality work list removed from system:</td>
+                                        <td class="history-item-value">{{status.ConfirmModalityWorkListRemoved}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="history-item-title">Confirm system HDD emptied of all patient studies:</td>
+                                        <td class="history-item-value">{{status.ConfirmSystemHDDEmptied}}</td>
+                                    </tr>
+                                </table>  
+                            </div>         
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="empty-cart history-status-empty-cart">
+            <td>
+                There are no items in this catalog.
+            </td>
+        </tr> 
+        
         <!--<tr>
             <td class="td-pagination">
                 <ul class="pagination">

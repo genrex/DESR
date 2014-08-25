@@ -42,7 +42,7 @@
 		            },
 		            type: 'POST',
 		            url: "svc.aspx",
-		            data: { op: 'GetDocuments', SPUrl: "http://tusspdev1/sites/marketing" },
+		            data: { op: 'GetDocuments', SPUrl: window.location.protocol + "://" + window.location.host + "/sites/marketing" },
 		            async: false,
 		            success: function (data) {
 		                //console.log(data.d.results); 
@@ -78,7 +78,7 @@
 		                        },
 		                        type: 'POST',
 		                        url: "svc.aspx",
-		                        data: { op: 'GetDocuments', SPUrl: "http://tusspdev1/sites/marketing" },
+		                        data: { op: 'GetDocuments', SPUrl: window.location.protocol + "://" + window.location.host + "/sites/marketing" },
 		                        async: false,
 		                        success: function (data) {
 		                            //console.log(data.d.results); 

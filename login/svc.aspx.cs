@@ -177,7 +177,7 @@ public partial class svc : System.Web.UI.Page
     {
         try
         {
-            var request = WebRequest.Create("http://tusspdev1/VirtualApps/MKTWebs/TAMS.MKT.MarketingMaterialCatalog.Mobile/login/AuthorizationCheck/test.html");
+            var request = WebRequest.Create("/VirtualApps/MKTWebs/TAMS.MKT.MarketingMaterialCatalog.Mobile/login/AuthorizationCheck/test.html");
             SetBasicAuthHeader(request, username, password);
             var response = request.GetResponse();
             return CreateJsonResponse(true);

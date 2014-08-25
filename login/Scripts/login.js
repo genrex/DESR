@@ -4,7 +4,7 @@ var rememberMe = 'MMCRemember';
 
 $(document).ready(function () {
     if (isSessionAvailable()) {
-        window.location.href = 'http://tusspdev1/VirtualApps/MKTWebs/TAMS.MKT.MarketingMaterialCatalog.Mobile/login/test.html';
+        window.location.href = '/VirtualApps/MKTWebs/TAMS.MKT.MarketingMaterialCatalog.Mobile/login/test.html';
     }
 });
 

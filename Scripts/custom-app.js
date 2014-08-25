@@ -1,7 +1,12 @@
-﻿var angApp = angular.module('catalog', ['ngRoute'])
+﻿var angApp = angular.module('catalog', ['ngRoute', 'ngSanitize'])
 .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/login', { templateUrl: 'partials/login.html', controller: LoginController }).
+          when('/home', { templateUrl: 'partials/Home.html', controller: HomeController }).
+          when('/history', { templateUrl: 'partials/History.html', controller: HistoryController }).
+          when('/history/:id', { templateUrl: 'partials/History.html', controller: HistoryController }).
+          when('/search', { templateUrl: 'partials/Search.html', controller: SearchController }).
+          when('/search/:searchstring', { templateUrl: 'partials/Search.html', controller: SearchController }).
           when('/mainCatalog', { templateUrl: 'partials/MainCatalog.html', controller: MainCatalogController }).
           when('/mainCatalog/:id', { templateUrl: 'partials/AddStatus.html', controller: CatalogController }).
           when('/newCatalog', { templateUrl: 'partials/AddNewStatus.html', controller: AddNewController }).
@@ -44,6 +49,12 @@
     });
 });
 
+angApp.filter('iif', function () {
+    return function (input, trueValue, falseValue) {
+        return input ? trueValue : falseValue;
+    };
+});
+
 /* Controllers */
 function LoginController($scope, $location, $rootScope, $http) {
     if (fsaApp.session.isSessionAvailable()) {
@@ -65,7 +76,7 @@ function LoginController($scope, $location, $rootScope, $http) {
             $scope.currentUserName = data.d.results[0].toUpperCase();
             $('#span-username').html($scope.currentUserName);
             showLoading(false);
-            $location.path("/mainCatalog");
+            $location.path("/home");
         })
         .error(function (data, status, headers, config) {
             $('#error-div').html('Error while fetching User.');
@@ -153,7 +164,7 @@ function LoginController($scope, $location, $rootScope, $http) {
                     $scope.currentUserName = data.d.results[0].toUpperCase();
                     $('#span-username').html($scope.currentUserName);
                     showLoading(false);
-                    $location.path("/mainCatalog");
+                    $location.path("/home");
                 })
                 .error(function (data, status, headers, config) {
                     $('#td-error').html('Error while fetching User.');
@@ -175,8 +186,10 @@ function LoginController($scope, $location, $rootScope, $http) {
 }
 
 function MainCatalogController($scope, $location, $rootScope, $http, $filter, sharedProperties) {
+    AppLogoVisibility();
     showLoading(true);
     $('#main-top-div').show();
+    $('.all-catalog-empty-cart').hide();
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName=="") {
         $http({
             method: "GET",
@@ -277,102 +290,8 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
             showLoading(false);
         });
     }
-
-    $scope.getAllCatalogs = function () {
-        showLoading(true);
-        $scope.allURL = "svc.aspx?op=GetAllCatalogs&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&position=" + $scope.allPosition + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
-        $http({
-            method: "GET",
-            url: $scope.allURL,
-            //url: $scope.currentURL,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
-        })
-        .success(function (data, status, headers, config) {
-            $scope.allCatalogs = data.d.results;
-            $scope.allCatalogs.forEach(function (node) {
-                if (node.System_x0020_Date !== undefined && node.System_x0020_Date != null && node.System_x0020_Date != "") {
-                    node.System_x0020_Date = node.System_x0020_Date.substr(0, node.System_x0020_Date.indexOf(' '));
-                    node.MCSS = node.MCSS.substr(node.MCSS.indexOf("#") + 1);
-                }
-            });
-            $scope.currentView = "All";
-            $scope.getSystemTypes();
-        })
-        .error(function (data, status, headers, config) {
-            $('#error-div').html('Error while fetching catalogs.');
-            showTimedElem('error-div');
-            showLoading(false);
-        });
-    }
-
-    $scope.getNewestCatalog = function () {
-        showLoading(true);
-        $scope.allURL = "svc.aspx?op=GetNewestCatalogs&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&position=" + $scope.newestPosition + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
-        $http({
-            method: "GET",
-            url: $scope.allURL,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
-        })
-        .success(function (data, status, headers, config) { 
-            $scope.newestCatalogs = data.d.results;
-            $scope.newestCatalogs.forEach(function (node) {
-                if (node.System_x0020_Date !== undefined && node.System_x0020_Date != null && node.System_x0020_Date != "") {
-                    node.System_x0020_Date = node.System_x0020_Date.substr(0, node.System_x0020_Date.indexOf(' '));
-                    node.MCSS = node.MCSS.substr(node.MCSS.indexOf("#") + 1);
-                }
-            });
-            $scope.currentView = "Newest";
-            $scope.getSystemTypes();
-        })
-        .error(function (data, status, headers, config) {
-            $('#error-div').html('Error while fetching catalogs.');
-            showTimedElem('error-div');
-            showLoading(false);
-        });
-    }    
-
-    $scope.searchCatalogs = function () {
-        $scope.searchTextTemp = $('#search-text-box').val();
-        if ($('#search-text-box').val() == "") {
-            $('#error-div').html('Please enter value to search');
-            showTimedElem('error-div');
-            showLoading(false);
-            return;
-        }
-        showLoading(true);
-        $scope.allURL = "svc.aspx?op=SearchCatalogs&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&searchText=" + $scope.searchText + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
-        $http({
-            method: "GET",
-            url: $scope.allURL,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
-        })
-        .success(function (data, status, headers, config) {
-            $scope.allCatalogs = data.d.results;
-            $scope.allCatalogs.forEach(function (node) {
-                if (node.System_x0020_Date !== undefined && node.System_x0020_Date != null && node.System_x0020_Date != "") {
-                    node.System_x0020_Date = node.System_x0020_Date.substr(0, node.System_x0020_Date.indexOf(' '));
-                    node.MCSS = node.MCSS.substr(node.MCSS.indexOf("#") + 1);
-                }
-            });
-            $scope.searchText = $scope.searchTextTemp;
-            $scope.currentView = "Search";
-            $scope.getSystemTypes();
-        })
-        .error(function (data, status, headers, config) {
-            $('#error-div').html('Error while fetching catalogs.');
-            showTimedElem('error-div');
-            showLoading(false);
-        });
     
-    }
-
-
+   
     $scope.getAllCatalogs();
     $scope.incrementValue = function (prefix, id) {
         $('#quantity-' + prefix + id).val(parseInt($('#quantity-' + prefix + id).val()) + 1);
@@ -395,9 +314,195 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
     $scope.addStatus = function (id) {
         $location.path('/mainCatalog/' + id);
     }
+
+    /*
+    $scope.getHistoryStatuses = function () {
+        showLoading(true);
+        $('.history-status-empty-cart').hide();
+
+        $scope.allURL = "svc.aspx?op=GetHistoryStatuses&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops";
+        $http({
+            method: "GET",
+            url: $scope.allURL,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+        })
+        .success(function (data, status, headers, config) {
+            $scope.historyStatuses = data.d.results;
+            $scope.currentView = "History";
+            $scope.getSystemTypes();
+
+            if (data.d.results.length == 0)
+                $('.history-status-empty-cart').show();
+        })
+        .error(function (data, status, headers, config) {
+            $('#error-div').html('Error while fetching catalogs.');
+            showTimedElem('error-div');
+            showLoading(false);
+        });
+        
+    }*/
 }
 
+function SearchController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
+    showLoading(true);
+    $('#main-top-div').show();
+    $('.all-catalog-empty-cart').hide();
+
+    if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
+        $http({
+            method: "GET",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            //url: $scope.currentURL,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+        })
+        .success(function (data, status, headers, config) {
+            if (data.d.results[1] != null && data.d.results[1] != '') {
+                $scope.currentUserEmail = data.d.results[1];
+            } else {
+                $scope.currentUserEmail = 'abodla@tams.com';
+            }
+            $('#current-user-email').val($scope.currentUserEmail);
+            $scope.currentUserName = data.d.results[0].toUpperCase();
+            $('#span-username').html($scope.currentUserName);
+        })
+        .error(function (data, status, headers, config) {
+            $('#error-div').html('Error while fetching User.');
+            showTimedElem('error-div');
+            showLoading(false);
+        });
+    }
+
+    enableTopMenus(true);
+
+    $scope.currentView = 'Search';
+    $scope.filterModality = 'All';
+    $scope.filterDocumentType = 'All';
+    $scope.searchText = '';
+    $scope.allPosition = 1;
+    $scope.newestPosition = 1;
+    $scope.newestCatalogs = [];
+    $scope.allCatalogs = [];
+    var cartCatalog = [];
+
+    if ($routeParams.searchstring != null && $routeParams.searchstring != "") {
+        var temps = $routeParams.searchstring.split(";");
+        for (var i = 0; i < temps.length; i++) {
+            var values = temps[i].split("=");
+            if (values.length == 2) {
+                if (values[0] == "documentType")
+                    $scope.filterDocumentType = values[1];
+                else if (values[0] == "searchText")
+                    $scope.searchText = values[1];
+            }
+        }
+    }
+
+
+    $('#filterModality').change(function () {
+        $scope.filterModality = $('#filterModality').val();
+
+        location.href = "main.html#/search/" + "modality=" + $scope.filterModality + ";documentType=" + $scope.filterDocumentType + ";searchText=" + $scope.searchText;
+    });
+
+    $('#filterDocumentType').change(function () {
+        $scope.filterDocumentType = $('#filterDocumentType').val();
+        location.href = "main.html#/search/" + "modality=" + $scope.filterModality + ";documentType=" + $scope.filterDocumentType + ";searchText=" + $scope.searchText;
+    });
+
+    $scope.getSystemTypes = function () {
+        showLoading(true);
+        $http({
+            method: "GET",
+            url: "svc.aspx?op=GetSystemTypes&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+        })
+         .success(function (data, status, headers, config) {
+             $scope.systemTypes = data.d.results;
+             showLoading(false);
+         })
+         .error(function (data, status, headers, config) {
+             $('#error-div').html('Error while fetching catalogs.');
+             showTimedElem('error-div');
+             showLoading(false);
+         });
+    }
+
+    
+    showLoading(true);
+    $scope.allURL = "svc.aspx?op=SearchCatalogs&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&searchText=" + $scope.searchText + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
+    $http({
+        method: "GET",
+        url: $scope.allURL,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+    })
+    .success(function (data, status, headers, config) {
+        $scope.allCatalogs = data.d.results;
+        $scope.allCatalogs.forEach(function (node) {
+            if (node.System_x0020_Date !== undefined && node.System_x0020_Date != null && node.System_x0020_Date != "") {
+                node.System_x0020_Date = node.System_x0020_Date.substr(0, node.System_x0020_Date.indexOf(' '));
+                node.MCSS = node.MCSS.substr(node.MCSS.indexOf("#") + 1);
+            }
+        });
+        //$scope.searchText = $scope.searchTextTemp;
+        //$scope.currentView = "Search";
+        $scope.getSystemTypes();
+
+        if (data.d.results.length == 0)
+            $('.all-catalog-empty-cart').show();
+    })
+    .error(function (data, status, headers, config) {
+        $('#error-div').html('Error while fetching catalogs.');
+        showTimedElem('error-div');
+        showLoading(false);
+    });
+
+
+
+    //$scope.getAllCatalogs();
+    $scope.incrementValue = function (prefix, id) {
+        $('#quantity-' + prefix + id).val(parseInt($('#quantity-' + prefix + id).val()) + 1);
+    }
+
+    $scope.decrementValue = function (prefix, id) {
+        if ($('#quantity-' + prefix + id).val() != '0') {
+            $('#quantity-' + prefix + id).val(parseInt($('#quantity-' + prefix + id).val()) - 1);
+        }
+    }
+
+    $('#search-text-box').keypress(function (e) {
+        $scope.searchText = $('#search-text-box').val();
+        if (e.which == 13) {
+            showLoading(true);
+            location.href = "main.html#/search/" + "modality=" + $scope.filterModality + ";documentType=" + $scope.filterDocumentType + ";searchText=" + $scope.searchText;
+        }
+    });
+
+    $('#search-button').click(function (e) {
+        $scope.searchText = $('#search-text-box').val();
+        showLoading(true);
+        location.href = "main.html#/search/" + "modality=" + $scope.filterModality + ";documentType=" + $scope.filterDocumentType + ";searchText=" + $scope.searchText;
+    });
+
+    $scope.addStatus = function (id) {
+        $location.path('/mainCatalog/' + id);
+    }
+
+    
+}
+
+
+
 function CatalogController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
     showLoading(true);
     $('#main-top-div').show();
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
@@ -500,13 +605,14 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
     $scope.hDDFreeOfPatientStudies = "Yes";
     $scope.demoImagesLoadedOnHardDrive = "Yes";
     $scope.systemPerformedAsExpected = "Yes";
+    $scope.systemPerformedNotAsExpectedExplain = "";
     $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo = "Yes";
     $scope.wasServiceContacted = "Yes";
     $scope.ConfirmSystemHddEmptiedOfAllPatientStudies = "Yes";
     $scope.ConfirmModalityWorkListRemovedFromSystem = "Yes";
     $scope.LayoutChangeExplain = "";
 
-    $scope.saveStatus = function () {
+    $scope.saveStatus = function (isFinal) {
         if ($scope.controlPanelLayout == "-- Please Select --" || $scope.modalityWorkListEmpty == "" || $scope.allSoftwareLoadedAndFunctioning == "" || $scope.nPDPresetsOnSystem == "" || $scope.hDDFreeOfPatientStudies == "" || $scope.demoImagesLoadedOnHardDrive == "" || $scope.systemPerformedAsExpected == "" || $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo == "" || $scope.ConfirmSystemHddEmptiedOfAllPatientStudies == "" || $scope.ConfirmModalityWorkListRemovedFromSystem == "") {
             $('#error-div').html('Please select all values.');
             showTimedElem('error-div');
@@ -543,19 +649,23 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
             return;
         }
 
-        var sure = confirm('Submit the status update?');
+        var confirmMessage = 'Submit the status update?';
+        if (isFinal == "Yes")
+            confirmMessage = 'Do you want to submit a final status?\nPlease make sure.....';
+
+        var sure = confirm(confirmMessage);
         if (sure) {
             showLoading(true);
             $http({
                 method: "GET",
-                url: "svc.aspx?op=AddStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&recordId=" + $routeParams.id + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone,
+                url: "svc.aspx?op=AddStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&recordId=" + $routeParams.id + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=" + isFinal,
                 //url: $scope.currentURL,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
             })
             .success(function (data, status, headers, config) {
-                $location.path('/mainCatalog');
+                $location.path('/search');
                 showLoading(false);
             })
             .error(function (data, status, headers, config) {
@@ -580,6 +690,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
 }
 
 function AddNewController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
     showLoading(true);
     $('#main-top-div').show();
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
@@ -666,6 +777,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
     $scope.hDDFreeOfPatientStudies = "Yes";
     $scope.demoImagesLoadedOnHardDrive = "Yes";
     $scope.systemPerformedAsExpected = "Yes";
+    $scope.systemPerformedNotAsExpectedExplain = "";
     $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo = "Yes";
     $scope.wasServiceContacted = "Yes";
     $scope.ConfirmSystemHddEmptiedOfAllPatientStudies = "Yes";
@@ -727,14 +839,14 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
             showLoading(true);
             $http({
                 method: "GET",
-                url: "svc.aspx?op=AddNewStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&SerialNumber=" + $scope.SystemSerialNumber + "&SoftwareVersion=" + $scope.SoftwareVersion + "&RevisionLevel=" + $scope.RevisionLevel + "&SystemType=" + $scope.SystemType + "&Modality=" + $scope.Modality + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone,
+                url: "svc.aspx?op=AddNewStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&SerialNumber=" + $scope.SystemSerialNumber + "&SoftwareVersion=" + $scope.SoftwareVersion + "&RevisionLevel=" + $scope.RevisionLevel + "&SystemType=" + $scope.SystemType + "&Modality=" + $scope.Modality + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=No",
                 //url: $scope.currentURL,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
             })
             .success(function (data, status, headers, config) {
-                $location.path('/mainCatalog');
+                $location.path('/search');
                 showLoading(false);
             })
             .error(function (data, status, headers, config) {
@@ -758,7 +870,151 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
 
 }
 
+function HomeController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
+    showLoading(true);
+    $http({
+        method: "GET",
+        url: "svc.aspx?op=AccessedHelp&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+    })
+    .success(function (data, status, headers, config) {
+        showLoading(false);
+
+        enableTopMenus(true);
+
+        $scope.currentView = 'Home';
+        $scope.filterModality = 'All';
+        $scope.filterDocumentType = 'All';
+        $scope.searchText = '';
+        $scope.allPosition = 1;
+        $scope.newestPosition = 1;
+        $scope.newestCatalogs = [];
+        $scope.allCatalogs = [];
+        var cartCatalog = [];
+    })
+    .error(function (data, status, headers, config) {
+        $('#error-div').html('Error while fetching User.');
+        showTimedElem('error-div');
+        showLoading(false);
+    });
+}
+
+function HistoryController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
+    showLoading(true);
+    $('.history-status-empty-cart').hide();
+
+    if ($routeParams.id != null && $routeParams.id != "")
+        $scope.historyId = $routeParams.id;
+    else
+        $scope.historyId = 0;
+
+    $http({
+        method: "GET",
+        url: "svc.aspx?op=GetHistoryStatuses&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+    })
+    .success(function (data, status, headers, config) {
+        showLoading(false);
+        enableTopMenus(true);
+
+        $scope.historyStatuses = data.d.results;
+
+        if (data.d.results.length == 0)
+            $('.history-status-empty-cart').show();
+        else if ($scope.historyId > 0) {
+            setTimeout(function () {
+                if ($(".itemid_" + $scope.historyId).length > 0)
+                    toggleHistoryStatusDetails($(".itemid_" + $scope.historyId).first());
+                else
+                    setTimeout(function () {
+                        toggleHistoryStatusDetails($(".itemid_" + $scope.historyId).first());
+                    }, 1000);
+            }, 1000);
+        }
+    })
+    .error(function (data, status, headers, config) {
+        $('#error-div').html('Error while fetching catalogs.');
+        showTimedElem('error-div');
+        showLoading(false);
+    });
+
+
+
+    $scope.saveAdditionalComment = function (id) {
+        var comment = $("#taAdditionalComment" + id).val();
+        showLoading(true);
+
+        $("#divAddCommentError" + id).hide();
+
+        if (jQuery.trim(comment) != "") {
+            $http({
+                method: "GET",
+                url: "svc.aspx?op=AddAdditionalComments&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&itemid=" + id + "&comment=" + comment,
+                //url: $scope.currentURL,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+            })
+            .success(function (data, status, headers, config) {
+                showLoading(false);
+                if ($routeParams.id != null && $routeParams.id != "" && $routeParams.id == id)
+                    location.reload(true);
+                else 
+                    $location.path('/history/' + id);                    
+            })
+            .error(function (data, status, headers, config) {
+                $('#error-div').html('Error while fetching User.');
+                showTimedElem('error-div');
+                $('#error-div2').html('Please select all values.');
+                showTimedElem('error-div2');
+                showLoading(false);
+            });
+        }
+        else {
+            $("#divAddCommentError" + id).show();
+        }
+    };
+
+        
+    /*
+    $http({
+        method: "GET",
+        url: "svc.aspx?op=AccessedHelp&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
+    })
+    .success(function (data, status, headers, config) {
+        showLoading(false);
+
+        enableTopMenus(true);
+
+        $scope.currentView = 'All';
+        $scope.filterModality = 'All';
+        $scope.filterDocumentType = 'All';
+        $scope.searchText = '';
+        $scope.allPosition = 1;
+        $scope.newestPosition = 1;
+        $scope.newestCatalogs = [];
+        $scope.allCatalogs = [];
+        var cartCatalog = [];
+    })
+    .error(function (data, status, headers, config) {
+        $('#error-div').html('Error while fetching User.');
+        showTimedElem('error-div');
+        showLoading(false);
+    });
+    */
+}
+
 function HelpController($scope, $location, $rootScope, $http, $filter, $routeParams) {
+    AppLogoVisibility();
     showLoading(true);
     $http({
         method: "GET",
@@ -787,7 +1043,7 @@ function LogOutController($scope, $location, $rootScope, $http, $filter, $routeP
     })
     .success(function (data, status, headers, config) {
         fsaApp.session.removeSessionValue();
-        window.location.href = "/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoEquipmentStatusRequest.Mobile/main.html#/login";
+        window.location.href = "/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoESR.Mobile/main.html#/login";
     })
     .error(function (data, status, headers, config) {
         $('#error-div').html('Error while fetching User.');
@@ -871,4 +1127,57 @@ function setCookie(c_name, value, exdays) {
     exdate.setDate(exdate.getDate() + exdays);
     var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
     document.cookie = c_name + "=" + c_value;
+}
+
+
+function toggleHistoryStatusDetails(obj) {
+    if ($(obj).hasClass("history-collapsed")) {
+        $(obj).removeClass("history-collapsed").addClass("history-expanded");
+        $(obj).next().show();
+    }
+    else {
+        $(obj).removeClass("history-expanded").addClass("history-collapsed");
+        $(obj).next().hide();
+    }
+}
+
+
+function showSearch() {
+    if ($("#img-search-button").attr("src").indexOf("search-button2.png") > 0) {
+        $("#img-search-button").attr("src", "Images/search-close-button2.png");
+        $("#div-search-bar").show(400);
+    }
+    else {
+        $("#img-search-button").attr("src", "Images/search-button2.png");
+        $("#div-search-bar").hide(400);
+    }
+}
+
+function GoBackHome() {
+    var str = location.href.toLowerCase();
+    if (str.indexOf("#/home") > 0)
+        location.reload(true);
+    else
+        location.href = 'main.html#/home';
+}
+
+
+function DecodeUnicodeString(x) {
+    var r = /\\u([\d\w]{4})/gi;
+    x = x.replace(r, function (match, grp) {
+        return String.fromCharCode(parseInt(grp, 16));
+    });
+    return unescape(x);
+}
+
+function AppLogoVisibility() {
+    var location = window.location.href.toLowerCase();
+    if (location.indexOf("#/home") > 0) {
+        $("#appLogoLink").show();
+        $("#appLogoBackLink").hide();
+    }
+    else {
+        $("#appLogoLink").hide();
+        $("#appLogoBackLink").show();
+    }
 }

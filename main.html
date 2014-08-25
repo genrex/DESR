@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no" />
     <title></title>
-    
+
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/custom.css" rel="stylesheet" />
 
@@ -14,44 +14,54 @@
     <script src="Scripts/jquery.fileDownload.js"></script>
     <script src="Scripts/angular.min.js"></script>
     <script src="Scripts/angular-route.min.js"></script>
+    <script src="Scripts/angular-sanitize.min.js"></script>
     <script src="Scripts/fsaApplication.js"></script>
     <script src="Scripts/custom-app.js"></script>
-	<script src="phonegap.js"></script>
+    <!--<script src="phonegap.js"></script>-->
 </head>
 <body ng-app="catalog">
     <div id="curtain"></div>
     <div id="hour-glass">
-        <img src="Images/ajax-loader.gif" /><br />Loading...
-    </div> 
-    <input type="hidden" id="current-user-email" />
-    <div style="align-content:center;" id="main-top-div" >
-	<div class="fixed-div">
-    <header class="row row-adjust hdr" id="header">
-    <div class="col-xs-12 div-page-title-black" id="page-title-black"></div>
-        <div class="col-xs-4 header-left">
-            <a href="/VirtualApps/BusOpsWebs/TAMS.BUSOPS.DemoEquipmentStatusRequest.Mobile/main.html"><img id="img-toshiba-logo" src="Images/toshiba-logo.png" /></a>            
-        </div>
-        <!--<div class="col-xs-4 header-center" id="div-main-heading">Marketing Catalog</div>-->
-        <div class="col-xs-4 header-right">
-            <div id="div-shopping-cart"><a class="a-menu-link" onclick="showMenu();"><img id="img-left-bars" src="Images/menu-button.png" /><img id="menu-close-button" src="Images/menu-close-button.png" /></a>
-                <div id="div-menu">
-                    <ul id="ul-menu">
-                        <li id="li-username"><span id="span-username">UPASHA</span></li>
-                        <li id="li-help"><a href="#/help">Help</a></li>
-                        <li id="li-sign-out"><a href="#/logout">Sign Out</a></li>
-                    </ul> 
-                </div>
-            </div>
-        </div>
-    <div class="col-xs-12 div-page-title" id="page-title"></div>
-    </header>
+        <img src="Images/ajax-loader.gif" /><br />
+        Loading...
     </div>
-	
-	</div>
+    <input type="hidden" id="current-user-email" />
+    <div style="align-content: center;" id="main-top-div">
+        <div class="fixed-div">
+            <header class="row row-adjust hdr" id="header">
+                <div class="col-xs-12 div-page-title-black" id="page-title-black"></div>
+                <div id="divMainHeader">
+                    <div class="col-xs-4 header-left">
+                        <a id="appLogoLink" style="display:none;" href="main.html#/home" onclick=""><img id="img-toshiba-logo" src="Images/toshiba-logo.png" /></a>
+                        <a id="appLogoBackLink" style="display:none;" href="javascript:void(0);" onclick="history.go(-1);"><img id="" src="Images/logo-back.png" /></a>
+                    </div>
+                    <!--<div class="col-xs-4 header-center" id="div-main-heading">Marketing Catalog</div>-->
+                    <div class="col-xs-4 header-right">
+                        <div id="div-shopping-cart">
+                            <a class="a-menu-link" onclick="showMenu();">
+                                <img id="img-left-bars" src="Images/menu-button2.png" /><img id="menu-close-button" src="Images/menu-close-button2.png" /></a>
+                            <div id="div-menu">
+                                <ul id="ul-menu">
+                                    <li id="li-username"><span id="span-username">UPASHA</span></li>
+                                    <li id="li-help"><a href="#/help">Help</a></li>
+                                    <li id="li-sign-out"><a href="#/logout">Sign Out</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--<div id="div-search-button"><a class="a-menu-link" onclick="showSearch();">
+                            <img id="img-search-button" src="Images/search-button2.png" /></a></div>-->
 
-    <div style="align-content:center; z-index:600;position:relative;">
-        <section class="row row-adjust" id="content" title="content" ng-view>        
-        </section>  
+                    </div>
+                </div>
+                <div class="col-xs-12 div-page-title" id="page-title" style="display: none;"></div>
+            </header>
+        </div>
+
+    </div>
+
+    <div style="align-content: center; z-index: 600; position: relative;">
+        <section class="row row-adjust" id="content" title="content" ng-view>
+        </section>
     </div>
 </body>
 </html>
