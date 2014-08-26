@@ -1,4 +1,8 @@
-﻿var angApp = angular.module('catalog', ['ngRoute', 'ngSanitize'])
+﻿var serviceURL = "http://tusspdev1"; //window.location.protocol + "//" + window.location.host
+
+
+
+var angApp = angular.module('catalog', ['ngRoute', 'ngSanitize'])
 .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/login', { templateUrl: 'partials/login.html', controller: LoginController }).
@@ -60,7 +64,7 @@ function LoginController($scope, $location, $rootScope, $http) {
     if (fsaApp.session.isSessionAvailable()) {
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -122,7 +126,7 @@ function LoginController($scope, $location, $rootScope, $http) {
         showLoading(true);
         $http({
             method: "GET",
-            url: "svc.aspx?op=Authenticate&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing&authInfo=" + Base64.encode($('#login').val() + ":" + $('#password').val()) + "&currentURL=" + window.location.href,
+            url: "svc.aspx?op=Authenticate&SPUrl=" + serviceRootUrl + "/sites/marketing&authInfo=" + Base64.encode($('#login').val() + ":" + $('#password').val()) + "&currentURL=" + window.location.href,
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -133,7 +137,7 @@ function LoginController($scope, $location, $rootScope, $http) {
                 fsaApp.session.setSessionValue(Base64.encode($('#login').val() + ":" + $('#password').val()), rememberMe);
                 $http({
                     method: "GET",
-                    url: "svc.aspx?op=Login&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+                    url: "svc.aspx?op=Login&SPUrl=" + serviceRootUrl + "/sites/marketing",
                     //url: $scope.currentURL,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -148,7 +152,7 @@ function LoginController($scope, $location, $rootScope, $http) {
                 });
                 $http({
                     method: "GET",
-                    url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+                    url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
                     //url: $scope.currentURL,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -193,7 +197,7 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName=="") {
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -274,7 +278,7 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
         showLoading(true);
        $http({
             method: "GET",
-            url: "svc.aspx?op=GetSystemTypes&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+            url: "svc.aspx?op=GetSystemTypes&SPUrl=" + serviceRootUrl + "/sites/busops",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -320,7 +324,7 @@ function MainCatalogController($scope, $location, $rootScope, $http, $filter, sh
         showLoading(true);
         $('.history-status-empty-cart').hide();
 
-        $scope.allURL = "svc.aspx?op=GetHistoryStatuses&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops";
+        $scope.allURL = "svc.aspx?op=GetHistoryStatuses&SPUrl=" + serviceRootUrl + "/sites/busops";
         $http({
             method: "GET",
             url: $scope.allURL,
@@ -354,7 +358,7 @@ function SearchController($scope, $location, $rootScope, $http, $filter, $routeP
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -418,7 +422,7 @@ function SearchController($scope, $location, $rootScope, $http, $filter, $routeP
         showLoading(true);
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetSystemTypes&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+            url: "svc.aspx?op=GetSystemTypes&SPUrl=" + serviceRootUrl + "/sites/busops",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -436,7 +440,7 @@ function SearchController($scope, $location, $rootScope, $http, $filter, $routeP
 
     
     showLoading(true);
-    $scope.allURL = "svc.aspx?op=SearchCatalogs&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&searchText=" + $scope.searchText + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
+    $scope.allURL = "svc.aspx?op=SearchCatalogs&SPUrl=" + serviceRootUrl + "/sites/busops&searchText=" + $scope.searchText + "&modality=" + $scope.filterModality + "&documentType=" + $scope.filterDocumentType;
     $http({
         method: "GET",
         url: $scope.allURL,
@@ -508,7 +512,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -564,7 +568,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
 
     $http({
         method: "GET",
-        url: "svc.aspx?op=GetCatalogById&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&id=" + $routeParams.id,
+        url: "svc.aspx?op=GetCatalogById&SPUrl=" + serviceRootUrl + "/sites/busops&id=" + $routeParams.id,
         //url: $scope.currentURL,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -576,7 +580,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
         $scope.catalog.MCSS = $scope.catalog.MCSS.substr($scope.catalog.MCSS.indexOf("#") + 1);
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetCPLValues&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+            url: "svc.aspx?op=GetCPLValues&SPUrl=" + serviceRootUrl + "/sites/busops",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -658,7 +662,7 @@ function CatalogController($scope, $location, $rootScope, $http, $filter, $route
             showLoading(true);
             $http({
                 method: "GET",
-                url: "svc.aspx?op=AddStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&recordId=" + $routeParams.id + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=" + isFinal,
+                url: "svc.aspx?op=AddStatus&SPUrl=" + serviceRootUrl + "/sites/busops&recordId=" + $routeParams.id + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=" + isFinal,
                 //url: $scope.currentURL,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -696,7 +700,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
     if ($('#current-user-email').val() == '' || $scope.currentUserName === undefined || $scope.currentUserName == "") {
         $http({
             method: "GET",
-            url: "svc.aspx?op=GetUserInfo&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/marketing",
+            url: "svc.aspx?op=GetUserInfo&SPUrl=" + serviceRootUrl + "/sites/marketing",
             //url: $scope.currentURL,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -754,7 +758,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
 
     $http({
         method: "GET",
-        url: "svc.aspx?op=GetCPLValues&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=GetCPLValues&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -839,7 +843,7 @@ function AddNewController($scope, $location, $rootScope, $http, $filter, $routeP
             showLoading(true);
             $http({
                 method: "GET",
-                url: "svc.aspx?op=AddNewStatus&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&SerialNumber=" + $scope.SystemSerialNumber + "&SoftwareVersion=" + $scope.SoftwareVersion + "&RevisionLevel=" + $scope.RevisionLevel + "&SystemType=" + $scope.SystemType + "&Modality=" + $scope.Modality + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=No",
+                url: "svc.aspx?op=AddNewStatus&SPUrl=" + serviceRootUrl + "/sites/busops&SerialNumber=" + $scope.SystemSerialNumber + "&SoftwareVersion=" + $scope.SoftwareVersion + "&RevisionLevel=" + $scope.RevisionLevel + "&SystemType=" + $scope.SystemType + "&Modality=" + $scope.Modality + "&ControlPanelLayout=" + $scope.controlPanelLayout + "&ModalityWorkListEmpty=" + $scope.modalityWorkListEmpty + "&AllSoftwareLoadedAndFunctioning=" + $scope.allSoftwareLoadedAndFunctioning + "&IfNoExplain=" + $scope.allSoftwareLoadedAndFunctioningReason + "&NPDPresetsOnSystem=" + $scope.nPDPresetsOnSystem + "&HDDFreeOfPatientStudies=" + $scope.hDDFreeOfPatientStudies + "&DemoImagesLoadedOnHardDrive=" + $scope.demoImagesLoadedOnHardDrive + "&SystemPerformedAsExpected=" + $scope.systemPerformedAsExpected + "&AnyIssuesDuringDemo=" + $scope.wereAnyIssuesDiscoveredWithSystemDuringDemo + "&wasServiceContacted=" + $scope.wasServiceContacted + "&ConfirmModalityWorkListRemoved=" + $scope.ConfirmModalityWorkListRemovedFromSystem + "&ConfirmSystemHDDEmptied=" + $scope.ConfirmSystemHddEmptiedOfAllPatientStudies + "&LayoutChangeExplain=" + $scope.LayoutChangeExplain + "&Comments=" + $scope.Comments + "&WorkPhone=" + $scope.userInfo.WorkPhone + "&SystemPerformedNotAsExpectedExplain=" + $scope.systemPerformedNotAsExpectedExplain + "&IsFinal=No",
                 //url: $scope.currentURL,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -875,7 +879,7 @@ function HomeController($scope, $location, $rootScope, $http, $filter, $routePar
     showLoading(true);
     $http({
         method: "GET",
-        url: "svc.aspx?op=AccessedHelp&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=AccessedHelp&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -914,7 +918,7 @@ function HistoryController($scope, $location, $rootScope, $http, $filter, $route
 
     $http({
         method: "GET",
-        url: "svc.aspx?op=GetHistoryStatuses&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=GetHistoryStatuses&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -955,7 +959,7 @@ function HistoryController($scope, $location, $rootScope, $http, $filter, $route
         if (jQuery.trim(comment) != "") {
             $http({
                 method: "GET",
-                url: "svc.aspx?op=AddAdditionalComments&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops&itemid=" + id + "&comment=" + comment,
+                url: "svc.aspx?op=AddAdditionalComments&SPUrl=" + serviceRootUrl + "/sites/busops&itemid=" + id + "&comment=" + comment,
                 //url: $scope.currentURL,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -985,7 +989,7 @@ function HistoryController($scope, $location, $rootScope, $http, $filter, $route
     /*
     $http({
         method: "GET",
-        url: "svc.aspx?op=AccessedHelp&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=AccessedHelp&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -1018,7 +1022,7 @@ function HelpController($scope, $location, $rootScope, $http, $filter, $routePar
     showLoading(true);
     $http({
         method: "GET",
-        url: "svc.aspx?op=AccessedHelp&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=AccessedHelp&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
@@ -1036,7 +1040,7 @@ function HelpController($scope, $location, $rootScope, $http, $filter, $routePar
 function LogOutController($scope, $location, $rootScope, $http, $filter, $routeParams) {
     $http({
         method: "GET",
-        url: "svc.aspx?op=LogOut&SPUrl=" + window.location.protocol + "//" + window.location.host + "/sites/busops",
+        url: "svc.aspx?op=LogOut&SPUrl=" + serviceRootUrl + "/sites/busops",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         headers: { "Authorization": fsaApp.session.getAuthenticationHeader() },
