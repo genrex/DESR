@@ -1,4 +1,4 @@
-﻿var serviceURL = "http://tusspdev1"; //window.location.protocol + "//" + window.location.host
+﻿var serviceRootUrl = "http://tusspdev1"; //window.location.protocol + "//" + window.location.host
 
 
 
